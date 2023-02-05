@@ -1,0 +1,23 @@
+.ingredientsBox {
+    display: grid;
+    grid-template-rows: min-content min-content auto;
+}
+
+.ingredients {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.ingredients::-webkit-scrollbar {
+    width: calc(var(--offset-base-size) * 2);
+    background: var(--background-element);
+}
+
+.ingredients::-webkit-scrollbar-button {
+    background: var(--background-alt);
+    height: 40px;
+}
+
+.ingredients::-webkit-scrollbar-thumb {
+    background: var(--text-inactive-color);
+}
