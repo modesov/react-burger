@@ -31,7 +31,7 @@ function AppHeader() {
                 <div className={`${headerStyle.headerContent} pt-4 pb-4`}>
                     <nav>
                         <ul className={headerStyle.menu}>
-                            {itemsMainMenu.map((el, index) => 
+                            {itemsMainMenu.map((el, index) =>
                                 <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}>
                                     <ItemMenu href={el.href} text={el.text} icon={el.icon} />
                                 </li>
@@ -43,7 +43,10 @@ function AppHeader() {
                     </div>
                     <nav>
                         <ul className={headerStyle.menu}>
-                            {itemsAccountMenu.map((el, index) => <li key={index}><ItemMenu href={el.href} isActive={el.isActive} text={el.text} icon={el.icon} /></li>)}
+                            {itemsAccountMenu.map((el, index) =>
+                                <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}>
+                                    <ItemMenu href={el.href} text={el.text} icon={el.icon} />
+                                </li>)}
                         </ul>
                     </nav>
                 </div>
