@@ -7,24 +7,21 @@ function AppHeader() {
     const itemsMainMenu = [
         {
             href: '/constructor',
-            isActive: true,
             text: 'Конструктор',
-            icon: BurgerIcon
+            icon: <BurgerIcon type='secondary' />
         },
         {
             href: '/orders',
-            isActive: false,
             text: 'Лента заказов',
-            icon: ListIcon
+            icon: <ListIcon type='secondary' />
         }
     ];
 
     const itemsAccountMenu = [
         {
             href: '/personal-account',
-            isActive: false,
             text: 'Личный кабинет',
-            icon: ProfileIcon
+            icon: <ProfileIcon type='secondary' />
         }
     ];
 
@@ -34,7 +31,11 @@ function AppHeader() {
                 <div className={`${headerStyle.headerContent} pt-4 pb-4`}>
                     <nav>
                         <ul className={headerStyle.menu}>
-                            {itemsMainMenu.map((el, index) => <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}><ItemMenu href={el.href} isActive={el.isActive} text={el.text} icon={el.icon} /></li>)}
+                            {itemsMainMenu.map((el, index) => 
+                                <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}>
+                                    <ItemMenu href={el.href} text={el.text} icon={el.icon} />
+                                </li>
+                            )}
                         </ul>
                     </nav>
                     <div className={headerStyle.logo}>
