@@ -1,0 +1,18 @@
+.ingredientBox {
+    position: relative;    
+    cursor: pointer;
+}
+
+.alignCenter {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+} 
+
+.priceBox {
+    composes: alignCenter
+}
+
+.title {
+    composes: alignCenter
+}
