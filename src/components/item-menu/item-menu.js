@@ -8,7 +8,7 @@ function ItemMenu({href, text, icon}) {
             {icon}
             <span type="primary" className='ml-2 text text_type_main-default'>{text}</span>
         </a>
-    ) 
+    ); 
 }
 
 ItemMenu.propTypes = {

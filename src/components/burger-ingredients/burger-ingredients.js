@@ -7,7 +7,7 @@ import Switch from '../switch/switch';
 import SectionType from '../section-type/section-type';
 import { ingredientPropTypes } from '../../utils/propTypeConst'
 
-function BurgerIngredients({data, onSelected}) {
+function BurgerIngredients({data, onSelected, selectedIngredients}) {
     const [current, setCurrent] = useState(tabs[0].value);
 
     return (
@@ -17,7 +17,15 @@ function BurgerIngredients({data, onSelected}) {
             <section className={burgerIngredientsStyle.ingredients}>
                 {tabs.map(tab => {
                     const ingredients = data.filter(el => el.type === tab.value);
-                    return (<SectionType key={tab.value} tab={tab} ingredients={ingredients} onSelected={onSelected} />);
+                    return (
+                        <SectionType
+                            key={tab.value} 
+                            tab={tab} 
+                            ingredients={ingredients} 
+                            onSelected={onSelected}
+                            selectedIngredients={selectedIngredients}
+                        />
+                    );
                 })}
             </section>
         </section>
@@ -26,7 +34,8 @@ function BurgerIngredients({data, onSelected}) {
 
 BurgerIngredients.propTypes = {
     data: PropTypes.arrayOf(ingredientPropTypes).isRequired,
-    onSelected: PropTypes.func.isRequired
+    onSelected: PropTypes.func.isRequired,
+    selectedIngredients: PropTypes.arrayOf(ingredientPropTypes).isRequired
 }
 
 export default BurgerIngredients;

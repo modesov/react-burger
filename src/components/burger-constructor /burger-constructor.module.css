@@ -35,6 +35,7 @@
 .iconDrag {
     width: 24px;
     height: 24px;
+    margin-right: calc(var(--offset-base-size) * 2);
 }
 
 .item:first-child {
@@ -55,4 +56,9 @@
 .totalPrice svg {
     width: 33px;
     height: 33px;
+}
+
+.element {
+    cursor: pointer;
+    width: 100%;
 }

@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import ingredientStyle from './ingredient.module.css';
 import { ingredientPropTypes } from '../../utils/propTypeConst';
 
-function Ingredient({ingredient, onSelected}) {
-    const [count, setCount] = useState(0);
+const Ingredient = React.memo(({ingredient, onSelected, selectedIngredients}) => {
+    const count = selectedIngredients.filter(el => el._id === ingredient._id).length;
 
     const selected = () => {
         onSelected(ingredient);
-        setCount(count + 1);
     }
 
     return (
@@ -25,11 +24,12 @@ function Ingredient({ingredient, onSelected}) {
             <div className={`${ingredientStyle.title} text text_type_main-default`}>{ingredient.name}</div>
         </div>
     );
-}
+});
 
 Ingredient.propTypes = {
     ingredient: ingredientPropTypes.isRequired,
-    onSelected: PropTypes.func.isRequired
+    onSelected: PropTypes.func.isRequired,
+    selectedIngredients: PropTypes.arrayOf(ingredientPropTypes).isRequired
 }
 
 export default Ingredient;
