@@ -4,8 +4,9 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor /burger-constructor';
 import appStyle from './app.module.css';
+import { checkResponse } from '../../utils/functions';
 
-const API_URL = 'https://norma.nomoreparties.space/api/';
+const API_BASE_URL = 'https://norma.nomoreparties.space/api/';
 
 function App() {
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -17,8 +18,8 @@ function App() {
 
   const getData = () => {
     setState({ ...state, hasError: false, isLoading: true });
-    fetch(`${API_URL}ingredients`)
-      .then(res => res.json())
+    fetch(`${API_BASE_URL}ingredients`)
+      .then(checkResponse)
       .then(data => {
         data.success
           ? setState({ ...state, data: data.data, hasError: false, isLoading: false }) 
