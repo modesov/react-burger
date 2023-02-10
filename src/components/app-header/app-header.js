@@ -46,7 +46,8 @@ function AppHeader() {
                             {itemsAccountMenu.map((el, index) =>
                                 <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}>
                                     <ItemMenu href={el.href} text={el.text} icon={el.icon} />
-                                </li>)}
+                                </li>
+                            )}
                         </ul>
                     </nav>
                 </div>
