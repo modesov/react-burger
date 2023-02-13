@@ -1,23 +1,23 @@
 .img {
-  width: 480px;
-  text-align: center;
+    width: 480px;
+    text-align: center;
 }
 
 .title {
-  text-align: center;
+    text-align: center;
 }
 
 .specifications {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-right: calc(var(--offset-base-size) * -5);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-right: calc(var(--offset-base-size) * -5);
 }
 
 .itemSpecification {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-right: calc(var(--offset-base-size) * 5);
-  width: calc(25% - var(--offset-base-size) * 5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: calc(var(--offset-base-size) * 5);
+    width: calc(25% - var(--offset-base-size) * 5);
 }

@@ -1,10 +1,10 @@
 .menuItem {
-  composes: appRow from '../app/app.module.css';
-  text-decoration: none;
-  color: var(--text-inactive-color);
+    composes: appRow from '../app/app.module.css';
+    text-decoration: none;
+    color: var(--text-inactive-color);
 }
 
 .menuItemActive {
-  composes: menuItem;
-  color: #F2F2F3;
+    composes: menuItem;
+    color: #F2F2F3;
 }
