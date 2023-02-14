@@ -47,14 +47,14 @@ function App() {
           !hasError &&
           ingredients.length &&
           <div className={appStyle.mainContent}>
-            <BurgerIngredients data={ingredients} />
             <IngredientsContext.Provider value={{ ingredients, setIngredients }}>
+              <BurgerIngredients />
               <BurgerConstructor />
             </IngredientsContext.Provider>
           </div>
         }
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }
 
