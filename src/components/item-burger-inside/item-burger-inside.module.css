@@ -1,0 +1,25 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: calc(var(--offset-base-size) * 4);
+  cursor: grab;
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+.iconDrag {
+  width: 24px;
+  height: 24px;
+  margin-right: calc(var(--offset-base-size) * 2);
+}
+
+.element {
+  width: 100%;
+}
+
+.isDrag {
+  opacity: 0;
+}

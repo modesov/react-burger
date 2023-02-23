@@ -1,0 +1,36 @@
+.boxNotification {
+  position: absolute;
+  top: 80px;
+  right: 50px;
+  z-index: 999;
+  max-width: 350px;
+}
+
+.content {
+  background-color: var(--background-element);
+  border-radius: 10px;
+}
+
+.content.error {
+  border: 1px var(--colors-interface-error) solid;
+}
+
+.content.warning {
+  border: 1px var(--colors-interface-accent) solid;
+}
+
+.btnClose {
+  position: absolute;
+  top: calc(var(--offset-base-size) * 3);
+  right: calc(var(--offset-base-size) * 3);
+  border: none;
+  padding: 0;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.btnClose svg {
+  width: 15px;
+  height: 15px;
+}

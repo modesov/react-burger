@@ -16,3 +16,7 @@
 .title {
   composes: alignCenter
 }
+
+.ingredientBox.isDrag {
+  opacity: .5;
+}
