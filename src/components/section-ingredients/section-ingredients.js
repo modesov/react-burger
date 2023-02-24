@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import sectionIngredientsStyle from './section-ingredients.module.css';
@@ -7,22 +7,23 @@ import Ingredient from '../ingredient/ingredient';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import { ingredientPropTypes } from '../../utils/propTypeConst';
-import { cleanDetailsIngredients, setDetailsIngredients } from '../../services/actions';
+import { cleanDetailsIngredient, setDetailsIngredient } from '../../services/actions/details-ingredient';
+import { selectorDetailsIngredient } from '../../services/selectors';
 
 function SectionIngredients({ ingredients }) {
-  const detailsIngredient = useSelector(state => state.detailsIngredient);
+  const detailsIngredient = useSelector(selectorDetailsIngredient);
   const dispatch = useDispatch();
 
   const handleOpenModalIngredient = useCallback(
     (data) => {
-      dispatch(setDetailsIngredients(data));
+      dispatch(setDetailsIngredient(data));
     },
     [dispatch]
   );
 
   const handleCloseModalIngredient = useCallback(
     () => {
-      dispatch(cleanDetailsIngredients());
+      dispatch(cleanDetailsIngredient());
     },
     [dispatch]
   );

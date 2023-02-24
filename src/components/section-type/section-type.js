@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { useInView } from 'react-intersection-observer';
-import { setCurrentTab } from '../../services/actions';
+import { setCurrentTab } from '../../services/actions/tabs';
 
 function SectionType({ value, text, children, root}) {
   // Очень похоже на костыль но пока не придумал как иначе сделать)

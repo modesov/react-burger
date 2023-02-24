@@ -1,16 +1,14 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { memo, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useDrag } from 'react-dnd';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import ingredientStyle from './ingredient.module.css';
 import { ingredientPropTypes } from '../../utils/propTypeConst';
-import { setIsDragIngredient } from '../../services/actions';
+import { selectorSelectedIngredients } from '../../services/selectors';
 
 function Ingredient({ ingredient, handleOpenModalIngredient }) {
-  const dispatch = useDispatch();
-
   const [{ isDrag }, dragRef] = useDrag({
     type: 'ingredient',
     item: ingredient,
@@ -19,11 +17,7 @@ function Ingredient({ ingredient, handleOpenModalIngredient }) {
     })
   });
 
-  useEffect(() => {
-    dispatch(setIsDragIngredient(isDrag));
-  }, [dispatch, isDrag]);
-
-  const { wrapIngredient, burgerInsides } = useSelector(state => state.selectedIngredients);
+  const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
 
   const countSelected = useMemo(() => (
     [...burgerInsides, wrapIngredient].reduce((acc, el) => el._id === ingredient._id ? acc + 1 : acc, 0)

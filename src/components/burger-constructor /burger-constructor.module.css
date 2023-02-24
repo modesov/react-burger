@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: min-content 1fr min-content min-content;
   box-sizing: border-box;
+  position: relative;
 }
 
 .totalBox {
@@ -24,10 +25,20 @@
   width: 100%;
 }
 
-.isDrag {
+.isHover {
   border: 1px dotted #ccc;
 }
 
-.isHover {
-  border: 1px solid #ccc;
+.hintBun {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  text-align: center;
+  width: 110%;
+}
+
+.hintOtherIngredient {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

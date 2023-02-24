@@ -9,12 +9,13 @@ import OrderDetails from '../order-details/order-details';
 import Notification from '../notification/notification';
 import Loader from '../loader/Loader';
 import BurgerInsides from '../burger-insides/burger-insides';
-import { addSelectedIngredient, orderClean, orderRegistration } from '../../services/actions';
+import { addSelectedIngredient } from '../../services/actions/selected-ingredients';
+import { orderClean, orderRegistration } from '../../services/actions/order';
+import { selectorOrder, selectorSelectedIngredients } from '../../services/selectors';
 
 function BurgerConstructor() {
-  const { wrapIngredient, burgerInsides } = useSelector(state => state.selectedIngredients);
-  const { isOrderRegistration, hasOrderError, orderData } = useSelector(state => state.order);
-  const isDragIngredient = useSelector(state => state.isDragIngredient);
+  const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
+  const { isOrderRegistration, hasOrderError, orderData } = useSelector(selectorOrder);
   const [isNotification, setIsNotification] = useState(false);
   const dispatch = useDispatch();
 
@@ -55,12 +56,13 @@ function BurgerConstructor() {
   return (
     <section
       ref={dropRef}
-      className={`mt-20 pt-5 pr-4 pl-4
-        ${burgerConstructorStyle.constructorBox} 
-        ${isHover ? burgerConstructorStyle.isHover : ''} 
-        ${isDragIngredient ? burgerConstructorStyle.isDrag : ''}`
-      }
+      className={`mt-20 pt-5 pr-4 pl-4 ${burgerConstructorStyle.constructorBox} ${isHover ? burgerConstructorStyle.isHover : ''}`}
     >
+      {!wrapIngredient._id && (
+        <div className={`text text_type_main-medium ${burgerConstructorStyle.hintBun}`}>
+          Перенесите булку сюда
+        </div>
+      )}
       {wrapIngredient._id && (
         <div className={`${burgerConstructorStyle.element} ml-8 mb-4`}>
           <ConstructorElement
@@ -72,9 +74,15 @@ function BurgerConstructor() {
           />
         </div>
       )}
-
-      <BurgerInsides burgerInsides={burgerInsides} />
-
+      {wrapIngredient._id && !burgerInsides.length ?
+        (
+          <div className={`text text_type_main-medium ${burgerConstructorStyle.hintOtherIngredient}`}>
+            Сюда остальные ингредиенты
+          </div>
+        )
+        :
+        (<BurgerInsides burgerInsides={burgerInsides} />)
+      }
       {wrapIngredient._id && (
         <div className={`${burgerConstructorStyle.element} ml-8 mt-4`}>
           <ConstructorElement

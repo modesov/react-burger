@@ -7,11 +7,12 @@ import SectionType from '../section-type/section-type';
 import SectionIngredients from '../section-ingredients/section-ingredients';
 import Notification from '../notification/notification';
 import Loader from '../loader/Loader';
-import { cleanIngredients, getIngredients} from '../../services/actions';
+import { cleanIngredients, getIngredients } from '../../services/actions/ingredients';
+import { selectorIngredients, selectorTabs } from '../../services/selectors';
 
 function BurgerIngredients() {
-  const tabs = useSelector(state => state.tabs);
-  const { data, isLoading, hasError } = useSelector(state => state.ingredients);
+  const tabs = useSelector(selectorTabs);
+  const { data, isLoading, hasError } = useSelector(selectorIngredients);
   const dispatch = useDispatch();
   const root = useRef();
 

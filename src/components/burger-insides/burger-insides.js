@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import burgerInsidesStyle from './burger-insides.module.css';
 import ItemBurgerInside from '../item-burger-inside/item-burger-inside';
 import { itemBurgerInsidePropTypes } from '../../utils/propTypeConst';
-import { deleteSelectedIngredient, updateSelectedIngredients } from '../../services/actions';
+import { deleteSelectedIngredient, updateSelectedIngredients } from '../../services/actions/selected-ingredients';
 
 function BurgerInsides({ burgerInsides }) {
   const [, dropRef] = useDrop(() => ({ accept: 'constructor' }));
