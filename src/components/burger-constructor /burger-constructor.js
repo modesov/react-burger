@@ -1,80 +1,69 @@
-import { useContext, useEffect, useReducer, useState } from 'react';
-import { Button, ConstructorElement, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, ConstructorElement, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useDrop } from 'react-dnd';
 
 import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { checkResponse } from '../../utils/functions';
-import { IngredientsContext } from '../../services/appContext';
-import { API_BASE_URL } from '../../utils/config';
-
-function reducerTotalPrice(state, action) {
-  return action.ingredients.reduce((total, el) => total + el.price, action.initialValue);
-}
+import Notification from '../notification/notification';
+import Loader from '../loader/Loader';
+import BurgerInsides from '../burger-insides/burger-insides';
+import { addSelectedIngredient } from '../../services/actions/selected-ingredients';
+import { orderClean, orderRegistration } from '../../services/actions/order';
+import { selectorOrder, selectorSelectedIngredients } from '../../services/selectors';
 
 function BurgerConstructor() {
-  const { ingredients } = useContext(IngredientsContext);
+  const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
+  const { isOrderRegistration, hasOrderError, orderData } = useSelector(selectorOrder);
+  const [isNotification, setIsNotification] = useState(false);
+  const dispatch = useDispatch();
 
-  const [wrapIngredient] = useState(ingredients.find((el) => el.type === 'bun'));
-  const [selectedIngredients, setSelectedIngredients] = useState(ingredients.filter((el) => el.type !== 'bun'));
-  const [order, setOrder] = useState({ isLoading: false, hasError: false, orderNumber: null });
-  const [isVisibleModalOrder, setIsVisibleModalOrder] = useState(false);
-  const [totalPrice, dispatchTotalPrice] = useReducer(reducerTotalPrice, 0);
-
-  useEffect(() => {
-    dispatchTotalPrice({
-      ingredients: selectedIngredients,
-      initialValue: wrapIngredient.price * 2
+  const [{ isHover }, dropRef] = useDrop({
+    accept: 'ingredient',
+    drop(item) {
+      if (!wrapIngredient._id && item.type !== 'bun') {
+        setIsNotification(true);
+      } else {
+        dispatch(addSelectedIngredient(item));
+      }
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
     })
-  }, [wrapIngredient, selectedIngredients]);
+  });
 
-  const placeOrder = () => {
-    setOrder({ ...order, hasError: false, isLoading: true });
-
-    fetch(`${API_BASE_URL}orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify({ ingredients: selectedIngredients.map(el => el._id) })
-    })
-      .then(checkResponse)
-      .then(data => {
-        if (data.success) {
-          setOrder({ isLoading: false, hasError: false, orderNumber: data.order.number });
-        } else {
-          setOrder({ ...order, isLoading: false, hasError: true });
-        }
-      })
-      .catch(e => {
-        setOrder({ ...order, isLoading: false, hasError: true });
-      })
-      .finally(() => {
-        setIsVisibleModalOrder(true);
-      });
+  const handleOrderRegistration = () => {
+    const ingredientIds = [wrapIngredient, ...burgerInsides].map(el => el._id);
+    dispatch(orderRegistration(ingredientIds));
   }
 
-  const handleOpenModalOrder = () => {
-    placeOrder();
+  const handleCleanOrder = () => {
+    dispatch(orderClean());
   }
 
-  const handleCloseModalOrder = () => {
-    setIsVisibleModalOrder(false);
-    setOrder({ isLoading: false, hasError: false, orderNumber: null });
-  }
+  const handleCloseNotification = useCallback(
+    () => {
+      setIsNotification(false);
+    }, []
+  );
 
-  const deleteIngredients = (evt) => {
-    const indexElement = evt.currentTarget.closest('li').dataset.index;
-    const newArray = [...selectedIngredients];
-    if (newArray[indexElement]) {
-      newArray.splice(indexElement, 1);
-      setSelectedIngredients(newArray);
-    }
-  }
+  const totalPrice = useMemo(() => {
+    const initialValue = +wrapIngredient?.price * 2;
+    return burgerInsides.reduce((total, el) => total + el.price, initialValue);
+  }, [burgerInsides, wrapIngredient]);
 
   return (
-    <section className={`${burgerConstructorStyle.constructorBox} pt-25 pr-4 pl-4`}>
-      {wrapIngredient && (
+    <section
+      ref={dropRef}
+      className={`mt-20 pt-5 pr-4 pl-4 ${burgerConstructorStyle.constructorBox} ${isHover ? burgerConstructorStyle.isHover : ''}`}
+    >
+      {!wrapIngredient._id && (
+        <div className={`text text_type_main-medium ${burgerConstructorStyle.hintBun}`}>
+          Перенесите булку сюда
+        </div>
+      )}
+      {wrapIngredient._id && (
         <div className={`${burgerConstructorStyle.element} ml-8 mb-4`}>
           <ConstructorElement
             type="top"
@@ -85,30 +74,18 @@ function BurgerConstructor() {
           />
         </div>
       )}
-      {selectedIngredients &&
-        <ul className={burgerConstructorStyle.list}>
-          {selectedIngredients.map((el, index) => {
-            return (
-              <li className={`${burgerConstructorStyle.item}`} key={index} data-index={index}>
-                <div className={burgerConstructorStyle.iconDrag}><DragIcon type="primary" /></div>
-                <div className={burgerConstructorStyle.element}>
-                  <ConstructorElement
-                    isLocked={false}
-                    text={el.name}
-                    price={el.price}
-                    thumbnail={el.image_mobile}
-                    handleClose={deleteIngredients}
-                  />
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+      {wrapIngredient._id && !burgerInsides.length ?
+        (
+          <div className={`text text_type_main-medium ${burgerConstructorStyle.hintOtherIngredient}`}>
+            Сюда остальные ингредиенты
+          </div>
+        )
+        :
+        (<BurgerInsides burgerInsides={burgerInsides} />)
       }
-      {wrapIngredient && (
+      {wrapIngredient._id && (
         <div className={`${burgerConstructorStyle.element} ml-8 mt-4`}>
           <ConstructorElement
-            className='mt-2'
             type="bottom"
             isLocked={true}
             text={`${wrapIngredient.name} (низ)`}
@@ -117,23 +94,35 @@ function BurgerConstructor() {
           />
         </div>
       )}
-      {totalPrice ? (
+      {totalPrice > 0 && (
         <div className={`${burgerConstructorStyle.totalBox} mt-10 mb-10`}>
           <div className={`${burgerConstructorStyle.totalPrice} text text_type_digits-medium mr-10`}>
             <span className='mr-2'>{totalPrice}</span>
             <CurrencyIcon type="primary" />
           </div>
-          <Button onClick={handleOpenModalOrder} htmlType="button" type="primary" size="large">
-            {order.isLoading ? 'Оформляем.....' : 'Оформить заказ'}
+          <Button onClick={handleOrderRegistration} htmlType="button" type="primary" size="large">
+            {isOrderRegistration ? 'Оформляем.....' : 'Оформить заказ'}
           </Button>
         </div>
-      )
-        : null
-      }
-      {isVisibleModalOrder &&
-        <Modal onClose={handleCloseModalOrder}>
-          <OrderDetails order={order} />
+      )}
+      {isOrderRegistration && <Loader />}
+      {!isOrderRegistration && orderData && (
+        <Modal onClose={handleCleanOrder}>
+          <OrderDetails order={orderData} />
         </Modal>
+      )
+      }
+      {hasOrderError && (
+        <Notification type='error' onClose={handleCleanOrder}>
+          Ошибка оформления заказа. Попробуйте еще раз
+        </Notification>
+      )
+      }
+      {isNotification && (
+        <Notification type='warning' onClose={handleCloseNotification}>
+          Сначала добавьте булку из раздела "Булки"!
+        </Notification>
+      )
       }
     </section>
   );
