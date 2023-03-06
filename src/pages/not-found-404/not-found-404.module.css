@@ -1,0 +1,20 @@
+.content {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 100%;
+}
+
+.img {
+  width: 500px;
+  height: 500px;
+}
+
+.link {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #F2F2F3;
+}

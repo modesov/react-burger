@@ -20,3 +20,8 @@
 .ingredientBox.isDrag {
   opacity: .5;
 }
+
+.link {
+  color: var(--text-primary-color);
+  text-decoration: none;
+}

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import headerStyle from './app-header.module.css';
@@ -6,7 +7,7 @@ import ItemMenu from '../item-menu/item-menu';
 function AppHeader() {
   const itemsMainMenu = [
     {
-      href: '/constructor',
+      href: '/',
       text: 'Конструктор',
       icon: <BurgerIcon type='secondary' />
     },
@@ -19,7 +20,7 @@ function AppHeader() {
 
   const itemsAccountMenu = [
     {
-      href: '/personal-account',
+      href: '/profile',
       text: 'Личный кабинет',
       icon: <ProfileIcon type='secondary' />
     }
@@ -39,7 +40,7 @@ function AppHeader() {
             </ul>
           </nav>
           <div className={headerStyle.logo}>
-            <a href="/"><Logo /></a>
+            <Link to="/"><Logo /></Link>
           </div>
           <nav>
             <ul className={headerStyle.menu}>
