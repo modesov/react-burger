@@ -23,17 +23,19 @@ export const IngredientDetailsPage = () => {
 
   }, [idIngredient, ingredients]);
 
-  if (ingredients && !detailsIngredient) {
+  if (ingredients.length && !detailsIngredient) {
     return (<NotFound404 />);
   }
 
   return (
     <>
       {isLoading && <Loader />}
-      <CenterBox>
-        <h1 className='text text_type_main-large'>Детали ингредиента</h1>
-        <IngredientDetails detailsIngredient={detailsIngredient} />
-      </CenterBox>
+      {detailsIngredient && (
+        <CenterBox>
+          <h1 className='text text_type_main-large'>Детали ингредиента</h1>
+          <IngredientDetails detailsIngredient={detailsIngredient} />
+        </CenterBox>
+      )}
     </>
   );
 }
