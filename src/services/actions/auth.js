@@ -1,4 +1,10 @@
-import { API_BASE_URL, authorizationRequest, checkResponse, getAccessToken, getUserRequest, logoutRequest, updateUserRequest } from '../api';
+import {
+  requestAuthorization,
+  requestLogout,
+  requestUpdateToken,
+  requestUpdateUser,
+  requestUser
+} from '../api';
 import {
   AUTH_REQUEST,
   AUTH_SUCCESS,
@@ -11,21 +17,21 @@ export const authorization = (data, type = 'login') => async (dispatch) => {
     type: AUTH_REQUEST
   });
 
-  const dataAuth = await authorizationRequest(data, type);
+  requestAuthorization(data, type)
+    .then(data => {
+      localStorage.setItem('refreshToken', data.refreshToken);
+      localStorage.setItem('accessToken', data.accessToken);
 
-  if (dataAuth.success) {
-    localStorage.setItem('refreshToken', dataAuth.refreshToken);
-    localStorage.setItem('accessToken', dataAuth.accessToken);
-
-    dispatch({
-      type: AUTH_SUCCESS,
-      user: dataAuth.user
+      dispatch({
+        type: AUTH_SUCCESS,
+        user: data.user
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: AUTH_ERROR,
+      });
     });
-  } else {
-    dispatch({
-      type: AUTH_ERROR,
-    });
-  }
 }
 
 export const getUser = () => async (dispatch) => {
@@ -33,13 +39,48 @@ export const getUser = () => async (dispatch) => {
     type: AUTH_REQUEST
   });
 
-  const dataUser = await getUserRequest();
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
 
-  if (dataUser.success) {
-    dispatch({
-      type: AUTH_SUCCESS,
-      user: dataUser.user
-    });
+  if (accessToken) {
+    requestUser(accessToken)
+      .then(data => {
+        dispatch({
+          type: AUTH_SUCCESS,
+          user: data.user
+        });
+      })
+      .catch(error => {
+        if (error.message === 'jwt expired' && refreshToken) {
+          requestUpdateToken(refreshToken)
+            .then(data => {
+              localStorage.setItem('accessToken', data.accessToken);
+              localStorage.setItem('refreshToken', data.refreshToken);
+
+              requestUser(data.accessToken)
+                .then(data => {
+                  dispatch({
+                    type: AUTH_SUCCESS,
+                    user: data.user
+                  });
+                })
+                .catch(error => {
+                  dispatch({
+                    type: AUTH_ERROR,
+                  });
+                })
+            })
+            .catch(error => {
+              dispatch({
+                type: AUTH_ERROR,
+              });
+            })
+        } else {
+          dispatch({
+            type: AUTH_ERROR,
+          });
+        }
+      })
   } else {
     dispatch({
       type: RESET_AUTH,
@@ -52,16 +93,51 @@ export const updateUser = (data) => async (dispatch) => {
     type: AUTH_REQUEST
   });
 
-  const dataUser = await updateUserRequest(data)
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
 
-  if (dataUser.success) {
-    dispatch({
-      type: AUTH_SUCCESS,
-      user: dataUser.user
-    });
+  if (accessToken) {
+    requestUpdateUser(data, accessToken)
+      .then(dataUser => {
+        dispatch({
+          type: AUTH_SUCCESS,
+          user: dataUser.user
+        });
+      })
+      .catch(error => {
+        if (error.message === 'jwt expired' && refreshToken) {
+          requestUpdateToken(refreshToken)
+            .then(dataToken => {
+              localStorage.setItem('accessToken', dataToken.accessToken);
+              localStorage.setItem('refreshToken', dataToken.refreshToken);
+
+              requestUpdateUser(data, dataToken.accessToken)
+                .then(dataUser => {
+                  dispatch({
+                    type: AUTH_SUCCESS,
+                    user: dataUser.user
+                  });
+                })
+                .catch(error => {
+                  dispatch({
+                    type: AUTH_ERROR,
+                  });
+                })
+            })
+            .catch(error => {
+              dispatch({
+                type: AUTH_ERROR,
+              });
+            })
+        } else {
+          dispatch({
+            type: AUTH_ERROR,
+          });
+        }
+      })
   } else {
     dispatch({
-      type: AUTH_ERROR,
+      type: RESET_AUTH,
     });
   }
 }
@@ -71,19 +147,21 @@ export const logout = () => async (dispatch) => {
     type: AUTH_REQUEST
   });
 
-  const data = await logoutRequest();
+  const refreshToken = localStorage.getItem('refreshToken');
 
-  if (data.success) {
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('accessToken');
-    dispatch({
-      type: RESET_AUTH,
+  requestLogout(refreshToken)
+    .then(data => {
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('accessToken');
+      dispatch({
+        type: RESET_AUTH,
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: AUTH_ERROR,
+      });
     });
-  } else {
-    dispatch({
-      type: AUTH_ERROR,
-    });
-  }
 }
 
 export const resetAuth = () => ({

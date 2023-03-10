@@ -1,4 +1,4 @@
-import { API_BASE_URL, checkResponse, getAccessToken } from '../api';
+import { requestOrderRegistration, requestUpdateToken } from '../api';
 import { cleanSelectedIngredients } from './selected-ingredients';
 import {
   ORDER_REGISTRATION,
@@ -12,35 +12,55 @@ export const orderRegistration = (ingredientIds) => async (dispatch) => {
     type: ORDER_REGISTRATION
   });
 
-  const accessToken = await getAccessToken();
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
 
-  fetch(`${API_BASE_URL}orders`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      Authorization: accessToken
-    },
-    body: JSON.stringify({ ingredients: ingredientIds })
-  })
-    .then(checkResponse)
-    .then(data => {
-      if (data.success) {
+  if (accessToken) {
+    requestOrderRegistration(ingredientIds, accessToken)
+      .then(data => {
         dispatch({
           type: ORDER_REGISTRATION_SUCCESS,
           data: data
         });
         dispatch(cleanSelectedIngredients());
-      } else {
-        dispatch({
-          type: ORDER_REGISTRATION_FAILED,
-        });
-      }
-    })
-    .catch(e => {
-      dispatch({
-        type: ORDER_REGISTRATION_FAILED,
-      });
+      })
+      .catch(error => {
+        if (error.message === 'jwt expired' && refreshToken) {
+          requestUpdateToken(refreshToken)
+            .then(data => {
+              localStorage.setItem('accessToken', data.accessToken);
+              localStorage.setItem('refreshToken', data.refreshToken);
+
+              requestOrderRegistration(ingredientIds, data.accessToken)
+                .then(data => {
+                  dispatch({
+                    type: ORDER_REGISTRATION_SUCCESS,
+                    data: data
+                  });
+                  dispatch(cleanSelectedIngredients());
+                })
+                .catch(error => {
+                  dispatch({
+                    type: ORDER_REGISTRATION_FAILED,
+                  });
+                })
+            })
+            .catch(error => {
+              dispatch({
+                type: ORDER_REGISTRATION_FAILED,
+              });
+            })
+        } else {
+          dispatch({
+            type: ORDER_REGISTRATION_FAILED,
+          });
+        }
+      })
+  } else {
+    dispatch({
+      type: ORDER_REGISTRATION_FAILED,
     });
+  }
 }
 
 export const orderClean = () => ({

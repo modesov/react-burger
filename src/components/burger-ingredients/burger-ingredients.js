@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import burgerIngredientsStyle from './burger-ingredients.module.css';
 import Switch from '../switch/switch';
@@ -9,45 +7,14 @@ import SectionType from '../section-type/section-type';
 import SectionIngredients from '../section-ingredients/section-ingredients';
 import Notification from '../notification/notification';
 import Loader from '../loader/Loader';
-import { cleanIngredients, getIngredients } from '../../services/actions/ingredients';
-import { selectorDetailsIngredient, selectorIngredients, selectorTabs } from '../../services/selectors';
-import Modal from '../modal/modal';
-import IngredientDetails from '../ingredient-details/ingredient-details';
-import { cleanDetailsIngredient, setDetailsIngredient } from '../../services/actions/details-ingredient';
+import { cleanIngredients } from '../../services/actions/ingredients';
+import { selectorIngredients, selectorTabs } from '../../services/selectors';
 
-function BurgerIngredients({ ingredientId }) {
-  const detailsIngredient = useSelector(selectorDetailsIngredient);
-  const navigate = useNavigate();
+function BurgerIngredients() {
   const tabs = useSelector(selectorTabs);
   const { data, isLoading, hasError } = useSelector(selectorIngredients);
   const dispatch = useDispatch();
   const root = useRef();
-
-  if (!ingredientId && detailsIngredient) {
-    dispatch(cleanDetailsIngredient());
-  }
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, []);
-
-  useEffect(() => {
-    if(data.length && ingredientId) {
-      const ingredient = data.find(el => el._id === ingredientId);
-      if (ingredient) {
-        dispatch(setDetailsIngredient(ingredient));
-      }
-    }
-
-  }, [data, dispatch, ingredientId])
-
-  const handleCloseModalIngredient = useCallback(
-    () => {
-      dispatch(cleanDetailsIngredient());
-      navigate('/');
-    },
-    [dispatch, navigate]
-  );
 
   const handleCleanIngredients = () => {
     dispatch(cleanIngredients());
@@ -76,8 +43,6 @@ function BurgerIngredients({ ingredientId }) {
     )
   }, [data]);
 
-
-
   return (
     <>
       <section className={burgerIngredientsStyle.ingredientsBox}>
@@ -98,20 +63,8 @@ function BurgerIngredients({ ingredientId }) {
           </Notification>)
         }
       </section>
-      {detailsIngredient &&
-        (
-          <Modal onClose={handleCloseModalIngredient} title='Детали ингредиента'>
-            <IngredientDetails detailsIngredient={detailsIngredient} />
-          </Modal>
-        )
-      }
     </>
-
   );
-}
-
-BurgerIngredients.propTypes = {
-  ingredientId: PropTypes.string
 }
 
 export default BurgerIngredients;

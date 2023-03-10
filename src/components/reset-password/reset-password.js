@@ -1,92 +1,73 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import resetPasswordStyle from './reset-password.module.css';
-import { API_BASE_URL, checkResponse } from '../../services/api'
-import { selectorUser } from '../../services/selectors';
+import { requestResetPassword } from '../../services/api';
+import { useForm } from '../../hooks/use-form';
+import Loader from '../loader/Loader';
 
 function ResetPassword() {
-  const [fields, setFields] = useState({
+  const [isError, setError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { values, handleChange } = useForm({
     password: '',
     token: ''
   });
-  const [isError, setIsError] = useState(false);
-  const user = useSelector(selectorUser);
-  const navigate = useNavigate();
-  const location = useLocation();
 
-  const resetPassword = () => {
-    fetch(`${API_BASE_URL}password-reset/reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify(fields)
-    })
-      .then(checkResponse)
-      .then(data => {
-        if (data.success) {
-          navigate('/login', { replace: true });
-        } else {
-          setIsError(true);
-        }
+  const resetPassword = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    requestResetPassword(values)
+      .then(() => {
+        navigate('/login', { replace: true });
       })
-      .catch(e => {
-        setIsError(true);
+      .catch(() => {
+        setLoading(false);
+        setError(true);
       });
   }
 
-  const onChange = (e) => {
+  const onChange = (event) => {
     if (isError) {
-      setIsError(false);
+      setError(false);
     }
 
-    setFields({
-      ...fields,
-      [e.target.name]: e.target.value
-    });
-  }
-
-  if (user || location.state?.from?.pathname !== '/forgot-password') {
-    return (
-      <Navigate
-        to='/'
-        replace
-      />
-    );
+    handleChange(event);
   }
 
   return (
     <>
+      {isLoading && <Loader />}
       <h1 className='text text_type_main-medium mb-6'>Восстановление пароля</h1>
-      <PasswordInput
-        placeholder={'Введите новый пароль'}
-        name={'password'}
-        extraClass="mb-6"
-        value={fields.password}
-        onChange={onChange}
-      />
-      <Input
-        type={'text'}
-        placeholder={'Введите код из письма'}
-        name={'token'}
-        extraClass="mb-6"
-        value={fields.token}
-        onChange={onChange}
-        error={isError}
-        errorText={'Ошибка сброса пароля. Попробуйте еще раз'}
-      />
-      <Button
-        htmlType="button"
-        type="primary"
-        size="medium"
-        extraClass="mb-20"
-        onClick={resetPassword}
-      >
-        Сохранить
-      </Button>
+      <form onSubmit={resetPassword}>
+        <PasswordInput
+          placeholder={'Введите новый пароль'}
+          name={'password'}
+          extraClass="mb-6"
+          value={values.password}
+          onChange={onChange}
+        />
+        <Input
+          type={'text'}
+          placeholder={'Введите код из письма'}
+          name={'token'}
+          extraClass="mb-6"
+          value={values.token}
+          onChange={onChange}
+          error={isError}
+          errorText={'Ошибка сброса пароля. Попробуйте еще раз'}
+        />
+        <Button
+          htmlType="submit"
+          type="primary"
+          size="medium"
+          extraClass="mb-20"
+        >
+          Сохранить
+        </Button>
+      </form>
       <p className="mb-4 text text_type_main-default">
         Вспомнили пароль?
         <Link to="/login" className={`${resetPasswordStyle.link} ml-2`}>Войти</Link>

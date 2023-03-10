@@ -1,32 +1,39 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-import ingredientDetailsPageStyle from './ingredient-details-page.module.css';
 import CenterBox from '../../components/UI/center-box/center-box';
 import IngredientDetails from '../../components/ingredient-details/ingredient-details';
+import { NotFound404 } from '../not-found-404/not-found-404';
 import { selectorIngredients } from '../../services/selectors';
-import { getIngredients } from '../../services/actions/ingredients';
 import Loader from '../../components/loader/Loader';
 
-export const IngredientDetailsPage = ({ ingredientId }) => {
+export const IngredientDetailsPage = () => {
   const { data: ingredients, isLoading } = useSelector(selectorIngredients);
-  const dispatch = useDispatch();
-  const ingredient = ingredients.find(el => el._id === ingredientId);
+  const [detailsIngredient, setDetailsIngredient] = useState(null);
+  const { idIngredient } = useParams();
 
   useEffect(() => {
-    if (!ingredients.length) {
-      dispatch(getIngredients());
+    if (ingredients && idIngredient) {
+      const ingredient = ingredients.find(el => el._id === idIngredient);
+      if (ingredient) {
+        setDetailsIngredient(ingredient);
+      }
     }
-  }, []);
+
+  }, [idIngredient, ingredients]);
+
+  if (ingredients && !detailsIngredient) {
+    return (<NotFound404 />);
+  }
 
   return (
     <>
       {isLoading && <Loader />}
-      {ingredient && (
-        <CenterBox>
-          <IngredientDetails detailsIngredient={ingredient} />
-        </CenterBox>
-      )}
+      <CenterBox>
+        <h1 className='text text_type_main-large'>Детали ингредиента</h1>
+        <IngredientDetails detailsIngredient={detailsIngredient} />
+      </CenterBox>
     </>
   );
 }

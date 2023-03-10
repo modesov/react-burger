@@ -5,6 +5,7 @@ import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-de
 import profileFormStyle from './profile-form.module.css';
 import { selectorUser } from '../../services/selectors';
 import { updateUser } from '../../services/actions/auth';
+import { useForm } from '../../hooks/use-form';
 
 function ProfileForm() {
   const dispatch = useDispatch();
@@ -14,74 +15,71 @@ function ProfileForm() {
     email: user.email,
     password: '',
   }
-  const [fields, setFields] = useState(initialState);
+  const { values, handleChange, setValues } = useForm(initialState);
   const [showButton, setShowButton] = useState(false);
 
-  const onChange = (e) => {
-    setFields({
-      ...fields,
-      [e.target.name]: e.target.value
-    });
-
+  const onChange = (event) => {
+    handleChange(event);
     setShowButton(true);
   }
 
-  const onSave = (e) => {
-    dispatch(updateUser(fields));
+  const onSave = (event) => {
+    event.preventDefault();
+    dispatch(updateUser(values));
   }
 
-  const onCancel = (e) => {
-    setFields(initialState);
+  const onCancel = () => {
+    setValues({ ...initialState });
     setShowButton(false);
   }
 
   return (
     <div className={profileFormStyle.box}>
-      <Input
-        type={'text'}
-        placeholder={'Имя'}
-        name={'name'}
-        value={fields.name}
-        extraClass="mb-6"
-        icon="EditIcon"
-        onChange={onChange}
-      />
-      <EmailInput
-        placeholder="Логин"
-        name={'email'}
-        value={fields.email}
-        isIcon={true}
-        extraClass="mb-6"
-        onChange={onChange}
-      />
-      <PasswordInput
-        name={'password'}
-        value={fields.password}
-        icon="EditIcon"
-        onChange={onChange}
-      />
-      {showButton &&
-        (<div className={profileFormStyle.buttons}>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="medium"
-            extraClass="mb-20"
-            onClick={onSave}
-          >
-            Сохранить
-          </Button>
-          <Button
-            htmlType="button"
-            type="primary"
-            size="medium"
-            extraClass="mb-20"
-            onClick={onCancel}
-          >
-            Отменить
-          </Button>
-        </div>)}
-
+      <form onSubmit={onSave}>
+        <Input
+          type={'text'}
+          placeholder={'Имя'}
+          name={'name'}
+          value={values.name}
+          extraClass="mb-6"
+          icon="EditIcon"
+          onChange={onChange}
+        />
+        <EmailInput
+          placeholder="Логин"
+          name={'email'}
+          value={values.email}
+          isIcon={true}
+          extraClass="mb-6"
+          onChange={onChange}
+        />
+        <PasswordInput
+          name={'password'}
+          value={values.password}
+          icon="EditIcon"
+          onChange={onChange}
+        />
+        {showButton &&
+          (<div className={profileFormStyle.buttons}>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="medium"
+              extraClass="mb-20"
+            >
+              Сохранить
+            </Button>
+            <Button
+              htmlType="button"
+              type="primary"
+              size="medium"
+              extraClass="mb-20"
+              onClick={onCancel}
+            >
+              Отменить
+            </Button>
+          </div>)}
+      </form>
     </div>
   );
 }

@@ -1,88 +1,114 @@
-export const API_BASE_URL = 'https://norma.nomoreparties.space/api/';
+const BASE_URL = 'https://norma.nomoreparties.space/api/';
 
-export const checkResponse = (res) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+const checkResponse = (res) => {
+  return res.ok ? res.json() : res.json().then((error) => Promise.reject(error));
 };
 
-export const authorizationRequest = async (data, type) => {
-  return await fetch(`${API_BASE_URL}auth/${type}`, {
+const checkSuccess = (res) => {
+  return res && res.success ? res : Promise.reject(res);
+}
+
+const request = (endpoint, options) => {
+  return fetch(`${BASE_URL}${endpoint}`, options)
+    .then(checkResponse)
+    .then(checkSuccess);
+}
+
+export const requestIngredients = () => request('ingredients');
+
+export const requestOrderRegistration = (ingredientIds, accessToken) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: accessToken
+    },
+    body: JSON.stringify({ ingredients: ingredientIds })
+  }
+
+  return request('orders', options);
+}
+
+export const requestUpdateToken = (refreshToken) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({ token: refreshToken })
+  }
+
+  return request('auth/token', options);
+}
+
+export const requestAuthorization = (data, type) => {
+  const url = `auth/${type}`;
+  const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify(data)
-  })
-    .then(checkResponse)
-    .then(data => data)
-    .catch(error => error);
-} 
+  }
 
-export const getUserRequest = async () => {
-  const accessToken = await getAccessToken();
-
-  return await fetch(`${API_BASE_URL}auth/user`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-      Authorization: accessToken
-    }
-  })
-    .then(checkResponse)
-    .then(data => data)
-    .catch(error => error);
+  return request(url, options);
 }
 
-export const updateUserRequest = async (data) => {
-  const accessToken = await getAccessToken();
+export const requestUser = (accessToken) => {
+  const options = {
+    headers: {
+      Authorization: accessToken
+    }
+  }
 
-  return await fetch(`${API_BASE_URL}auth/user`, {
+  return request('auth/user', options);
+}
+
+export const requestUpdateUser = (data, accessToken) => {
+  const options = {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
       Authorization: accessToken
     },
     body: JSON.stringify(data)
-  })
-    .then(checkResponse)
-    .then(data => data)
-    .catch(error => error);
+  }
+
+  return request('auth/user', options);
 }
 
-export const logoutRequest = async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
-
-  return await fetch(`${API_BASE_URL}auth/logout`, {
+export const requestLogout = (refreshToken) => {
+  const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify({ token: refreshToken })
-  })
-    .then(checkResponse)
-    .then(data => data)
-    .catch(error => error);
-} 
+  }
 
-export const getTokenRequest = async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
+  return request('auth/logout', options);
+}
 
-  return await fetch(`${API_BASE_URL}auth/token`, {
+export const requestForgotPassword = (email) => {
+  const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify({ token: refreshToken })
-  })
-    .then(checkResponse)
-    .then(data => data)
-    .catch(error => error);
+    body: JSON.stringify({ email: email })
+  }
+
+  return request('password-reset', options);
 }
 
-export const getAccessToken = async () => {
-  const dataToken = await getTokenRequest();
+export const requestResetPassword = (fields) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(fields)
+  }
 
-  localStorage.setItem('refreshToken', dataToken.refreshToken);
-  localStorage.setItem('accessToken', dataToken.accessToken);
-
-  return localStorage.getItem('accessToken');
+  return request('password-reset/reset', options);
 }

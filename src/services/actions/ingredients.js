@@ -1,4 +1,4 @@
-import { API_BASE_URL, checkResponse } from '../api';
+import { requestIngredients } from '../api';
 import {
   GET_INGREDIENTS,
   GET_INGREDIENTS_FAILED,
@@ -11,21 +11,14 @@ export const getIngredients = () => (dispatch) => {
     type: GET_INGREDIENTS
   });
 
-  fetch(`${API_BASE_URL}ingredients`)
-    .then(checkResponse)
+  requestIngredients()
     .then(data => {
-      if (data.success) {
-        dispatch({
-          type: GET_INGREDIENTS_SUCCESS,
-          data: data.data
-        });
-      } else {
-        dispatch({
-          type: GET_INGREDIENTS_FAILED,
-        });
-      }
+      dispatch({
+        type: GET_INGREDIENTS_SUCCESS,
+        data: data.data
+      });
     })
-    .catch(e => {
+    .catch(error => {
       dispatch({
         type: GET_INGREDIENTS_FAILED,
       });

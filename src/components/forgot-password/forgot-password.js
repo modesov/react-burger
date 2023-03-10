@@ -1,78 +1,63 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import forgotPasswordStyle from './forgot-password.module.css';
-import { API_BASE_URL, checkResponse } from '../../services/api'
-import { selectorUser } from '../../services/selectors';
+import { requestForgotPassword } from '../../services/api'
+import { useForm } from '../../hooks/use-form';
+import Loader from '../loader/Loader';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
-  const [isError, setIsError] = useState(false);
-  const user = useSelector(selectorUser);
+  const [isError, setError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { values, handleChange } = useForm({ email: '' });
 
-  const sendEmail = () => {
-    fetch(`${API_BASE_URL}password-reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify({ email: email })
-    })
-      .then(checkResponse)
-      .then(data => {
-        if (data.success) {
-          navigate('/reset-password', { replace: true, state: {from: location} });
-        } else {
-          setIsError(true);
-        }
+  const sendEmail = (event) => {
+    event.preventDefault();
+    setLoading(true);
+    requestForgotPassword(values.email)
+      .then(() => {
+        navigate('/reset-password', { replace: true, state: { from: location } });
       })
-      .catch(e => {
-        setIsError(true);
+      .catch(() => {
+        setLoading(false);
+        setError(true);
       });
   }
 
-  const onChange = (e) => {
+  const onChange = (event) => {
     if (isError) {
-      setIsError(false);
+      setError(false);
     }
 
-    setEmail(e.target.value);
-  }
-
-  if (user) {
-    return (
-      <Navigate
-        to='/'
-        replace
-      />
-    );
+    handleChange(event);
   }
 
   return (
     <>
+      {isLoading && <Loader />}
       <h1 className='text text_type_main-medium mb-6'>Восстановление пароля</h1>
-      <EmailInput
-        placeholder={'Укажите e-mail'}
-        name={'email'}
-        extraClass="mb-6"
-        value={email}
-        onChange={onChange}
-        error={isError}
-        errorText="Ошибка восстановления пароля. Попробуйте еще раз"
-      />
-      <Button
-        htmlType="button"
-        type="primary"
-        size="medium"
-        extraClass="mb-20"
-        onClick={sendEmail}
-      >
-        Восстановить
-      </Button>
+      <form onSubmit={sendEmail}>
+        <EmailInput
+          placeholder={'Укажите e-mail'}
+          name={'email'}
+          extraClass="mb-6"
+          value={values.email}
+          onChange={onChange}
+          error={isError}
+          errorText="Ошибка восстановления пароля. Попробуйте еще раз"
+        />
+        <Button
+          htmlType="submit"
+          type="primary"
+          size="medium"
+          extraClass="mb-20"
+        >
+          Восстановить
+        </Button>
+      </form>
       <p className="mb-4 text text_type_main-default">
         Вспомнили пароль?
         <Link to="/login" className={`${forgotPasswordStyle.link} ml-2`}>Войти</Link>

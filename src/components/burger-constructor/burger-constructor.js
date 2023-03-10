@@ -40,7 +40,8 @@ function BurgerConstructor() {
     if (!user) {
       navigate('/login');
     } else {
-      const ingredientIds = [wrapIngredient, ...burgerInsides].map(el => el._id);
+      // Не забываем две булочки в заказ
+      const ingredientIds = [wrapIngredient, wrapIngredient, ...burgerInsides].map(el => el._id);
       dispatch(orderRegistration(ingredientIds));
     }
   }

@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import profileNavigationStyle from './profile-navigation.module.css';
 import { logout } from '../../services/actions/auth';
 
@@ -7,11 +7,9 @@ const setActive = ({ isActive }) => `${profileNavigationStyle.link} ${isActive &
 
 function ProfileNavigation() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onLogout = () => {
     dispatch(logout());
-    navigate('/login', {replace: true});
   }
 
   return (
