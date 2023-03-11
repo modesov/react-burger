@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useDrag } from 'react-dnd';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -7,10 +7,8 @@ import ingredientStyle from './ingredient.module.css';
 import { ingredientPropTypes } from '../../utils/propTypeConst';
 import { selectorSelectedIngredients } from '../../services/selectors';
 import { Link, useLocation } from 'react-router-dom';
-import { setDetailsIngredient } from '../../services/actions/details-ingredient';
 
 function Ingredient({ ingredient }) {
-  const dispatch = useDispatch();
   const location = useLocation();
   const [{ isDrag }, dragRef] = useDrag({
     type: 'ingredient',
@@ -26,13 +24,8 @@ function Ingredient({ ingredient }) {
     [...burgerInsides, wrapIngredient, wrapIngredient].reduce((acc, el) => el._id === ingredient._id ? acc + 1 : acc, 0)
   ), [burgerInsides, ingredient._id, wrapIngredient]);
 
-  const handleSetDetailsIngredient = () => {
-    dispatch(setDetailsIngredient(ingredient));
-  }
-
   return (
     <Link
-      onClick={handleSetDetailsIngredient}
       to={`/ingredients/${ingredient._id}`}
       className={ingredientStyle.link}
       state={{ background: location }}

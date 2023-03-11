@@ -1,18 +1,14 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import appStyle from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import ProtectedRoute from '../../hoc/protected-route';
 import ProfileForm from '../profile-form/profile-form';
 import ProfileOrders from '../profile-orders/profile-orders';
-import IngredientDetails from '../ingredient-details/ingredient-details'
-import Modal from '../modal/modal';
 import { getIngredients } from '../../services/actions/ingredients';
 import { getUser } from '../../services/actions/auth';
-import { selectorDetailsIngredient } from '../../services/selectors';
-import { cleanDetailsIngredient } from '../../services/actions/details-ingredient';
 import {
   ForgotPasswordPage,
   IngredientDetailsPage,
@@ -23,6 +19,7 @@ import {
   RegisterPage,
   ResetPasswordPage
 } from '../../pages';
+import { ModalDetailsIngredient } from '../modal-details-ingregient/modal-details-ingredient';
 
 function App() {
   const dispatch = useDispatch();
@@ -34,21 +31,14 @@ function App() {
 
   const ModalSwitch = () => {
     const location = useLocation();
-    const navigate = useNavigate();
-    let background = location.state && location.state.background;
-    const detailsIngredient = useSelector(selectorDetailsIngredient);
-
-    const handleModalClose = () => {
-      dispatch(cleanDetailsIngredient());
-      navigate(-1);
-    };
+    const background = location.state?.background;
 
     return (
       <div className={appStyle.app}>
         <AppHeader />
         <main className='pr-5 pl-5'>
           <div className={`container ${appStyle.mainContainer}`}>
-            <Routes location={background || location}>
+            <Routes location={background ?? location}>
               <Route path='/' element={<MainPage />} />
               <Route path='/login' element={
                 <ProtectedRoute anonymous={true}>
@@ -77,14 +67,12 @@ function App() {
               <Route path='/ingredients/:idIngredient' element={<IngredientDetailsPage />} />
               <Route path='*' element={<NotFound404 />} />
             </Routes>
-            {background && detailsIngredient && (
+            {background && (
               <Routes>
                 <Route
                   path='/ingredients/:idIngredient'
                   element={
-                    <Modal onClose={handleModalClose} title='Детали ингредиента'>
-                      <IngredientDetails detailsIngredient={detailsIngredient} />
-                    </Modal>
+                    <ModalDetailsIngredient />
                   }
                 />
               </Routes>
