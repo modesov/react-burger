@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, ConstructorElement, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
+import { Button, ConstructorElement, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import burgerConstructorStyle from './burger-constructor.module.css';
 import Modal from '../modal/modal';
@@ -11,13 +12,15 @@ import Loader from '../loader/Loader';
 import BurgerInsides from '../burger-insides/burger-insides';
 import { addSelectedIngredient } from '../../services/actions/selected-ingredients';
 import { orderClean, orderRegistration } from '../../services/actions/order';
-import { selectorOrder, selectorSelectedIngredients } from '../../services/selectors';
+import { selectorOrder, selectorSelectedIngredients, selectorUser } from '../../services/selectors';
 
 function BurgerConstructor() {
   const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
   const { isOrderRegistration, hasOrderError, orderData } = useSelector(selectorOrder);
   const [isNotification, setIsNotification] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector(selectorUser);
+  const navigate = useNavigate();
 
   const [{ isHover }, dropRef] = useDrop({
     accept: 'ingredient',
@@ -34,8 +37,13 @@ function BurgerConstructor() {
   });
 
   const handleOrderRegistration = () => {
-    const ingredientIds = [wrapIngredient, ...burgerInsides].map(el => el._id);
-    dispatch(orderRegistration(ingredientIds));
+    if (!user) {
+      navigate('/login');
+    } else {
+      // Не забываем две булочки в заказ
+      const ingredientIds = [wrapIngredient, wrapIngredient, ...burgerInsides].map(el => el._id);
+      dispatch(orderRegistration(ingredientIds));
+    }
   }
 
   const handleCleanOrder = () => {

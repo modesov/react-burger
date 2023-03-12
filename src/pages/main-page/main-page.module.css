@@ -1,0 +1,6 @@
+.mainContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: calc(var(--offset-base-size) * 10);
+  grid-auto-rows: calc(100vh - 96px);
+}

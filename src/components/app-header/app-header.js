@@ -1,12 +1,17 @@
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import headerStyle from './app-header.module.css';
 import ItemMenu from '../item-menu/item-menu';
+import { selectorUser } from '../../services/selectors';
 
 function AppHeader() {
+  const user = useSelector(selectorUser);
+
   const itemsMainMenu = [
     {
-      href: '/constructor',
+      href: '/',
       text: 'Конструктор',
       icon: <BurgerIcon type='secondary' />
     },
@@ -17,13 +22,21 @@ function AppHeader() {
     }
   ];
 
-  const itemsAccountMenu = [
-    {
-      href: '/personal-account',
-      text: 'Личный кабинет',
-      icon: <ProfileIcon type='secondary' />
-    }
-  ];
+  const itemsAccountMenu = user
+    ? [
+      {
+        href: '/profile',
+        text: 'Личный кабинет',
+        icon: <ProfileIcon type='secondary' />
+      }
+    ]
+    : [
+      {
+        href: '/login',
+        text: 'Войти',
+        icon: <ProfileIcon type='secondary' />
+      }
+    ];
 
   return (
     <header className={`${headerStyle.header} pr-5 pl-5`}>
@@ -39,10 +52,11 @@ function AppHeader() {
             </ul>
           </nav>
           <div className={headerStyle.logo}>
-            <a href="/"><Logo /></a>
+            <Link to="/"><Logo /></Link>
           </div>
           <nav>
             <ul className={headerStyle.menu}>
+              {user?.name}
               {itemsAccountMenu.map((el, index) =>
                 <li className={`mr-2 ${headerStyle.itemMenu}`} key={index}>
                   <ItemMenu href={el.href} text={el.text} icon={el.icon} />

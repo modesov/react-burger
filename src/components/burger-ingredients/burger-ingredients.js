@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import burgerIngredientsStyle from './burger-ingredients.module.css';
@@ -7,7 +7,7 @@ import SectionType from '../section-type/section-type';
 import SectionIngredients from '../section-ingredients/section-ingredients';
 import Notification from '../notification/notification';
 import Loader from '../loader/Loader';
-import { cleanIngredients, getIngredients } from '../../services/actions/ingredients';
+import { cleanIngredients } from '../../services/actions/ingredients';
 import { selectorIngredients, selectorTabs } from '../../services/selectors';
 
 function BurgerIngredients() {
@@ -15,10 +15,6 @@ function BurgerIngredients() {
   const { data, isLoading, hasError } = useSelector(selectorIngredients);
   const dispatch = useDispatch();
   const root = useRef();
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, []);
 
   const handleCleanIngredients = () => {
     dispatch(cleanIngredients());
@@ -48,24 +44,26 @@ function BurgerIngredients() {
   }, [data]);
 
   return (
-    <section className={burgerIngredientsStyle.ingredientsBox}>
-      {isLoading && <Loader />}
-      {!isLoading && !hasError && data.length > 0 &&
-        (
-          <>
-            <h1 className="text text_type_main-large mt-10 mb-5">Соберите бургер</h1>
-            <Switch tabs={tabs} onClick={onClickTab} />
-            {ingredientsBySections}
-          </>
-        )
-      }
-      {
-        hasError &&
-        (<Notification type='error' onClose={handleCleanIngredients}>
-          Ошибка загрузки страницы. <br /> Наши инженеры уже в курсе и разбираются с этой проблемой. <br /> Попробуйте позднее.
-        </Notification>)
-      }
-    </section >
+    <>
+      <section className={burgerIngredientsStyle.ingredientsBox}>
+        {isLoading && <Loader />}
+        {!isLoading && !hasError && data.length > 0 &&
+          (
+            <>
+              <h1 className="text text_type_main-large mt-10 mb-5">Соберите бургер</h1>
+              <Switch tabs={tabs} onClick={onClickTab} />
+              {ingredientsBySections}
+            </>
+          )
+        }
+        {
+          hasError &&
+          (<Notification type='error' onClose={handleCleanIngredients}>
+            Ошибка загрузки страницы. <br /> Наши инженеры уже в курсе и разбираются с этой проблемой. <br /> Попробуйте позднее.
+          </Notification>)
+        }
+      </section>
+    </>
   );
 }
 
