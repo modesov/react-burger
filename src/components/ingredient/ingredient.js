@@ -1,14 +1,13 @@
-import { memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { memo } from 'react';
 import { useDrag } from 'react-dnd';
 import { Counter, CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from 'prop-types';
 
 import ingredientStyle from './ingredient.module.css';
 import { ingredientPropTypes } from '../../utils/propTypeConst';
-import { selectorSelectedIngredients } from '../../services/selectors';
 import { Link, useLocation } from 'react-router-dom';
 
-function Ingredient({ ingredient }) {
+function Ingredient({ ingredient, countSelected }) {
   const location = useLocation();
   const [{ isDrag }, dragRef] = useDrag({
     type: 'ingredient',
@@ -17,12 +16,6 @@ function Ingredient({ ingredient }) {
       isDrag: monitor.isDragging()
     })
   });
-
-  const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
-
-  const countSelected = useMemo(() => (
-    [...burgerInsides, wrapIngredient, wrapIngredient].reduce((acc, el) => el._id === ingredient._id ? acc + 1 : acc, 0)
-  ), [burgerInsides, ingredient._id, wrapIngredient]);
 
   return (
     <Link
@@ -48,7 +41,8 @@ function Ingredient({ ingredient }) {
 };
 
 Ingredient.propTypes = {
-  ingredient: ingredientPropTypes.isRequired
+  ingredient: ingredientPropTypes.isRequired,
+  countSelected: PropTypes.number.isRequired
 }
 
 export default memo(Ingredient);
