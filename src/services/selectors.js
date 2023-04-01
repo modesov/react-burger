@@ -18,13 +18,16 @@ export const selectorIngredientCounters = createSelector(
   selectorSelectedIngredients,
   selectorIngredients,
   ({ wrapIngredient, burgerInsides }, { data: ingredients }) => {
-    const counters = {};
+    const counters = [];
     ingredients.forEach(ingredient => {
-      counters[ingredient._id] = [...burgerInsides, wrapIngredient, wrapIngredient].reduce(
-        (acc, el) => el._id === ingredient._id ? acc + 1 : acc, 0
-      );
+      counters.push({
+        id: ingredient._id,
+        count: [...burgerInsides, wrapIngredient, wrapIngredient].reduce(
+          (acc, el) => el._id === ingredient._id ? acc + 1 : acc, 0
+        )
+      });
     });
 
-    return counters;
+    return counters
   }
 );

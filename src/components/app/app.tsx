@@ -1,0 +1,93 @@
+import { FC, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+
+import appStyle from './app.module.css';
+import AppHeader from '../app-header/app-header';
+import ProtectedRoute from '../../hoc/protected-route';
+import ProfileForm from '../profile-form/profile-form';
+import ProfileOrders from '../profile-orders/profile-orders';
+import { getIngredients } from '../../services/actions/ingredients';
+import { getUser } from '../../services/actions/auth';
+import {
+  ForgotPasswordPage,
+  IngredientDetailsPage,
+  LoginPage,
+  MainPage,
+  NotFound404,
+  ProfilePage,
+  RegisterPage,
+  ResetPasswordPage
+} from '../../pages';
+import { ModalDetailsIngredient } from '../modal-details-ingregient/modal-details-ingredient';
+
+const App: FC = () => {
+  const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    dispatch(getIngredients());
+    dispatch(getUser());
+  }, []);
+
+  const ModalSwitch = () => {
+    const location = useLocation();
+    const background = location.state?.background;
+
+    return (
+      <div className={appStyle.app}>
+        <AppHeader />
+        <main className='pr-5 pl-5'>
+          <div className={`container ${appStyle.mainContainer}`}>
+            <Routes location={background ?? location}>
+              <Route path='/' element={<MainPage />} />
+              <Route path='/login' element={
+                <ProtectedRoute anonymous={true}>
+                  <LoginPage />
+                </ProtectedRoute>} />
+              <Route path='/register' element={
+                <ProtectedRoute anonymous={true}>
+                  <RegisterPage />
+                </ProtectedRoute>} />
+              <Route path='/forgot-password' element={
+                <ProtectedRoute anonymous={true}>
+                  <ForgotPasswordPage />
+                </ProtectedRoute>} />
+              <Route path='/reset-password' element={
+                <ProtectedRoute anonymous={true} onlyWith='/forgot-password'>
+                  <ResetPasswordPage />
+                </ProtectedRoute>} />
+              <Route path='/profile' element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }>
+                <Route path='' element={<ProfileForm />} />
+                <Route path='orders' element={<ProfileOrders />} />
+              </Route>
+              <Route path='/ingredients/:idIngredient' element={<IngredientDetailsPage />} />
+              <Route path='*' element={<NotFound404 />} />
+            </Routes>
+            {background && (
+              <Routes>
+                <Route
+                  path='/ingredients/:idIngredient'
+                  element={
+                    <ModalDetailsIngredient />
+                  }
+                />
+              </Routes>
+            )}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <ModalSwitch />
+    </BrowserRouter>
+  );
+}
+
+export default App;
