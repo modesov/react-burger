@@ -1,5 +1,4 @@
 import { FC, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 import appStyle from './app.module.css';
@@ -20,9 +19,16 @@ import {
   ResetPasswordPage
 } from '../../pages';
 import { ModalDetailsIngredient } from '../modal-details-ingregient/modal-details-ingredient';
+import { useDispatch } from '../../services/hooks';
+import { FeedPage } from '../../pages/feed-page/feed-page';
+import { Feed } from '../feed/feed';
+import { FeedDetails } from '../feed-details/feed-details';
+import ProfileOrderDetails from '../profile-order-details/profile-order-details';
+import { ModalOrderDetails } from '../modal-order-details/modal-order-details';
+import { selectorWSOrders, selectorWSProfileOrders } from '../../services/selectors';
 
 const App: FC = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -40,6 +46,10 @@ const App: FC = () => {
           <div className={`container ${appStyle.mainContainer}`}>
             <Routes location={background ?? location}>
               <Route path='/' element={<MainPage />} />
+              <Route path='/feed' element={<FeedPage />}>
+                <Route path='' element={<Feed />} />
+                <Route path=':id' element={<FeedDetails />} />
+              </Route>
               <Route path='/login' element={
                 <ProtectedRoute anonymous={true}>
                   <LoginPage />
@@ -63,6 +73,7 @@ const App: FC = () => {
               }>
                 <Route path='' element={<ProfileForm />} />
                 <Route path='orders' element={<ProfileOrders />} />
+                <Route path='orders/:id' element={<ProfileOrderDetails />} />
               </Route>
               <Route path='/ingredients/:idIngredient' element={<IngredientDetailsPage />} />
               <Route path='*' element={<NotFound404 />} />
@@ -73,6 +84,20 @@ const App: FC = () => {
                   path='/ingredients/:idIngredient'
                   element={
                     <ModalDetailsIngredient />
+                  }
+                />
+                <Route
+                  path='/feed/:id'
+                  element={
+                    <ModalOrderDetails selector={selectorWSOrders} />
+                  }
+                />
+                <Route
+                  path='/profile/orders/:id'
+                  element={
+                    <ProtectedRoute>
+                      <ModalOrderDetails selector={selectorWSProfileOrders} />
+                    </ProtectedRoute>
                   }
                 />
               </Routes>

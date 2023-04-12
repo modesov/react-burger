@@ -1,11 +1,11 @@
 import { FC, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 
 import burgerInsidesStyle from './burger-insides.module.css';
 import ItemBurgerInside from '../item-burger-inside/item-burger-inside';
 import { deleteSelectedIngredient, updateSelectedIngredients } from '../../services/actions/selected-ingredients';
 import { SelectedIngredientType } from '../../utils/types';
+import { useDispatch } from '../../services/hooks';
 
 interface BurgerInsidesProps {
   burgerInsides: SelectedIngredientType[];

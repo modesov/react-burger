@@ -1,4 +1,4 @@
-import { ResetPasswordType, UserType } from "../utils/types";
+import { AuthUserType, ResetPasswordType, UserLoginType, UserType } from "../utils/types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api/';
 
@@ -12,7 +12,7 @@ interface OptionsType {
   body?: string
 }
 
-const checkSuccess = (res: { success: boolean }) => {
+const checkSuccess = (res: any) => {
   return res && res.success ? res : Promise.reject(res);
 }
 
@@ -49,7 +49,7 @@ export const requestUpdateToken = (refreshToken: string) => {
   return request('auth/token', options);
 }
 
-export const requestAuthorization = (data: UserType, type: string) => {
+export const requestAuthorization = (data: UserLoginType | UserType, type: string) => {
   const url: string = `auth/${type}`;
   const options: OptionsType = {
     method: 'POST',

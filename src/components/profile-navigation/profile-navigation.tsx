@@ -1,14 +1,14 @@
 import { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 
 import profileNavigationStyle from './profile-navigation.module.css';
 import { logout } from '../../services/actions/auth';
+import { useDispatch } from '../../services/hooks';
 
 const setActive = ({ isActive }: {isActive: boolean}) => `${profileNavigationStyle.link} ${isActive && profileNavigationStyle.active}`;
 
 const ProfileNavigation: FC = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch();
 
   const onLogout = () => {
     dispatch(logout());
