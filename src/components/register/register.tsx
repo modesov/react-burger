@@ -1,17 +1,17 @@
 import { ChangeEvent, FC, FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import registerStyle from './register.module.css';
-import { authorization, resetAuth } from '../../services/actions/auth';
+import { authorization, getResetAuthAction } from '../../services/actions/auth';
 import { selectorAuth } from '../../services/selectors';
 import Loader from '../loader/Loader';
 import { useForm } from '../../hooks/use-form';
 import { UserType } from '../../utils/types';
+import { useDispatch, useSelector } from '../../services/hooks';
 
 const Register: FC = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch();
   const { isLoading, hasError } = useSelector(selectorAuth);
   const { values, handleChange } = useForm<UserType>({
     name: '',
@@ -21,7 +21,7 @@ const Register: FC = () => {
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (hasError) {
-      dispatch(resetAuth());
+      dispatch(getResetAuthAction());
     }
     handleChange(event);
   }

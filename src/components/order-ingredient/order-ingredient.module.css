@@ -1,0 +1,20 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--offset-base-size) * 4);
+}
+
+.name {
+  flex-grow: 1;
+}
+
+.name span {
+  display: block;
+  width: 320px;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}

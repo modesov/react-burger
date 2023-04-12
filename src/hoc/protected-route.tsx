@@ -1,10 +1,9 @@
 import { FC, ReactElement } from "react";
-import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
-
 
 import { selectorAuth } from "../services/selectors";
 import Loader from "../components/loader/Loader";
+import { useSelector } from '../services/hooks';
 
 interface ProtectedRouteProps {
   children: ReactElement;
@@ -26,7 +25,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ children, anonymous = false, 
   }
 
   if (!anonymous && !user) {
-    return <Navigate to="/login" state={{from: location}} />;
+    return <Navigate to="/login" state={{ from: location }} />;
   }
 
   return children;

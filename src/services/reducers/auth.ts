@@ -1,3 +1,5 @@
+import { AuthUserType } from '../../utils/types';
+import { TAuthActions } from '../actions/auth';
 import {
   AUTH_REQUEST,
   AUTH_SUCCESS,
@@ -5,13 +7,19 @@ import {
   RESET_AUTH
 } from '../constants';
 
-const initialState = {
+type TAuthState = {
+  isLoading: Boolean;
+  hasError: Boolean;
+  user: AuthUserType | null;
+}
+
+const initialState: TAuthState = {
   isLoading: false,
   hasError: false,
   user: null
 }
 
-const auth = (state = initialState, action) => {
+const auth = (state = initialState, action: TAuthActions): TAuthState => {
   switch (action.type) {
     case AUTH_REQUEST: {
       return {

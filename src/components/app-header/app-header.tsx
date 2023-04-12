@@ -1,12 +1,12 @@
-import { useSelector } from 'react-redux';
+import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import { FC } from 'react';
 import headerStyle from './app-header.module.css';
 import ItemMenu from '../item-menu/item-menu';
 import { selectorUser } from '../../services/selectors';
 import { ItemsMenuType } from '../../utils/types';
+import { useSelector } from '../../services/hooks';
 
 const AppHeader: FC = () => {
   const user = useSelector(selectorUser);
@@ -18,7 +18,7 @@ const AppHeader: FC = () => {
       icon: <BurgerIcon type='secondary' />
     },
     {
-      href: '/orders',
+      href: '/feed',
       text: 'Лента заказов',
       icon: <ListIcon type='secondary' />
     }

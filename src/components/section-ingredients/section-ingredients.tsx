@@ -1,10 +1,10 @@
 import { FC, memo } from 'react';
-import { useSelector } from 'react-redux';
 
 import sectionIngredientsStyle from './section-ingredients.module.css';
 import Ingredient from '../ingredient/ingredient';
 import { selectorIngredientCounters } from '../../services/selectors';
 import { IngredientType } from '../../utils/types';
+import { useSelector } from '../../services/hooks';
 
 interface SectionIngredientsProps {
   ingredients: IngredientType[];

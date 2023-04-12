@@ -1,5 +1,4 @@
 import { FC, ReactNode, useCallback, useMemo, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import burgerIngredientsStyle from './burger-ingredients.module.css';
 import Switch from '../switch/switch';
@@ -10,6 +9,7 @@ import Loader from '../loader/Loader';
 import { cleanIngredients } from '../../services/actions/ingredients';
 import { selectorIngredients, selectorTabs } from '../../services/selectors';
 import { HandleFunctionType, IngredientType, TabType } from '../../utils/types';
+import { useDispatch, useSelector } from '../../services/hooks';
 
 export type OnClickTabCallback = (value: string) => void;
 
