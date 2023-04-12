@@ -1,0 +1,28 @@
+.list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: calc(var(--offset-base-size) * 2);
+}
+
+.list::-webkit-scrollbar {
+  width: calc(var(--offset-base-size) * 2);
+  background: var(--background-element);
+}
+
+.list::-webkit-scrollbar-track:disabled {
+  background: var(--background-alt);
+}
+
+.list::-webkit-scrollbar-thumb {
+  background: var(--text-inactive-color);
+}
+
+.list::-webkit-scrollbar-button {
+  background: var(--background-alt);
+  height: calc(var(--offset-base-size) * 10)
+}
+

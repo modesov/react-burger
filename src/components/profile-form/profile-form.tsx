@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
 import React, { FC, useState } from 'react';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 
@@ -7,13 +6,14 @@ import { selectorUser } from '../../services/selectors';
 import { updateUser } from '../../services/actions/auth';
 import { useForm } from '../../hooks/use-form';
 import { UserType } from '../../utils/types';
+import { useDispatch, useSelector } from '../../services/hooks';
 
 const ProfileForm: FC = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch();
   const user = useSelector(selectorUser);
-  const initialState = {
-    name: user.name,
-    email: user.email,
+  const initialState: UserType = {
+    name: user ? user.name : '',
+    email: user ? user?.email: '',
     password: '',
   }
   const { values, handleChange, setValues } = useForm<UserType>(initialState);

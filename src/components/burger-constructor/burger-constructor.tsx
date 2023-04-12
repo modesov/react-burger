@@ -1,5 +1,4 @@
 import { FC, useCallback, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 import { Button, ConstructorElement, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -14,19 +13,20 @@ import { addSelectedIngredient } from '../../services/actions/selected-ingredien
 import { orderClean, orderRegistration } from '../../services/actions/order';
 import { selectorOrder, selectorSelectedIngredients, selectorUser } from '../../services/selectors';
 import { HandleFunctionType, IngredientType, SelectedIngredientType } from '../../utils/types';
+import { useDispatch, useSelector } from '../../services/hooks';
 
 const BurgerConstructor: FC = () => {
   const { wrapIngredient, burgerInsides } = useSelector(selectorSelectedIngredients);
   const { isOrderRegistration, hasOrderError, orderData } = useSelector(selectorOrder);
   const [isNotification, setIsNotification] = useState(false);
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch();
   const user = useSelector(selectorUser);
   const navigate = useNavigate();
 
   const [{ isHover }, dropRef] = useDrop({
     accept: 'ingredient',
     drop(item: IngredientType) {
-      if (!wrapIngredient._id && item.type !== 'bun') {
+      if (!wrapIngredient && item.type !== 'bun') {
         setIsNotification(true);
       } else {
         dispatch(addSelectedIngredient(item));
@@ -42,7 +42,7 @@ const BurgerConstructor: FC = () => {
       navigate('/login');
     } else {
       // Не забываем две булочки в заказ
-      const ingredientIds: string[] = [wrapIngredient, wrapIngredient, ...burgerInsides].map(el => el._id);
+      const ingredientIds: string[] = [wrapIngredient, wrapIngredient, ...burgerInsides].map(el => el ? el._id : '');
       dispatch(orderRegistration(ingredientIds));
     }
   }
@@ -58,7 +58,7 @@ const BurgerConstructor: FC = () => {
   );
 
   const totalPrice = useMemo<number>(() => {
-    const initialValue = +wrapIngredient?.price * 2;
+    const initialValue = wrapIngredient ? +wrapIngredient?.price * 2 : 0;
     return burgerInsides.reduce((total: number, el: SelectedIngredientType) => total + el.price, initialValue);
   }, [burgerInsides, wrapIngredient]);
 
@@ -67,12 +67,12 @@ const BurgerConstructor: FC = () => {
       ref={dropRef}
       className={`mt-20 pt-5 pr-4 pl-4 ${burgerConstructorStyle.constructorBox} ${isHover ? burgerConstructorStyle.isHover : ''}`}
     >
-      {!wrapIngredient._id && (
+      {!wrapIngredient && (
         <div className={`text text_type_main-medium ${burgerConstructorStyle.hintBun}`}>
           Перенесите булку сюда
         </div>
       )}
-      {wrapIngredient._id && (
+      {wrapIngredient && (
         <div className={`${burgerConstructorStyle.element} ml-8 mb-4`}>
           <ConstructorElement
             type="top"
@@ -83,7 +83,7 @@ const BurgerConstructor: FC = () => {
           />
         </div>
       )}
-      {wrapIngredient._id && !burgerInsides.length ?
+      {wrapIngredient && !burgerInsides.length ?
         (
           <div className={`text text_type_main-medium ${burgerConstructorStyle.hintOtherIngredient}`}>
             Сюда остальные ингредиенты
@@ -92,7 +92,7 @@ const BurgerConstructor: FC = () => {
         :
         (<BurgerInsides burgerInsides={burgerInsides} />)
       }
-      {wrapIngredient._id && (
+      {wrapIngredient && (
         <div className={`${burgerConstructorStyle.element} ml-8 mt-4`}>
           <ConstructorElement
             type="bottom"

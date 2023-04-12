@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { selectorIngredients } from "../services/selectors";
 import { IngredientType } from "../utils/types";
+import { useSelector } from '../services/hooks';
 
 export const useDetailsIngredient = () => {
   const { data: ingredients, isLoading } = useSelector(selectorIngredients);

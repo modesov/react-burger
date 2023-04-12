@@ -1,8 +1,8 @@
 import { FC, ReactNode, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 
 import { useInView } from 'react-intersection-observer';
 import { setCurrentTab } from '../../services/actions/tabs';
+import { useDispatch } from '../../services/hooks';
 
 interface SectionTypeProps {
   value: string;

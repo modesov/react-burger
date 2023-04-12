@@ -1,3 +1,5 @@
+import { SelectedIngredientType } from '../../utils/types';
+import { TSelectedIngredientActions } from '../actions/selected-ingredients';
 import {
   ADD_SELECTED_INGREDIENT,
   DELETE_SELECTED_INGREDIENT,
@@ -5,12 +7,17 @@ import {
   UPDATE_SELECTED_INGREDIENTS
 } from '../constants';
 
-const initialState = {
-  wrapIngredient: {},
+type TSelectedIngredientsState = {
+  wrapIngredient: SelectedIngredientType | null,
+  burgerInsides: SelectedIngredientType[]
+}
+
+const initialState: TSelectedIngredientsState = {
+  wrapIngredient: null,
   burgerInsides: []
 }
 
-const selectedIngredients = (state = initialState, action) => {
+const selectedIngredients = (state = initialState, action: TSelectedIngredientActions): TSelectedIngredientsState => {
   switch (action.type) {
     case ADD_SELECTED_INGREDIENT: {
       if (action.data.type === 'bun') {

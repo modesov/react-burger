@@ -1,6 +1,8 @@
 .box {
   width: 318px;
   margin-right: calc(var(--offset-base-size) * 15);
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 
 .list {
