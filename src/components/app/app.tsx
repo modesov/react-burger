@@ -109,7 +109,7 @@ const App: FC = () => {
   }
 
   return (
-    <BrowserRouter basename='/react-burger'>
+    <BrowserRouter>
       <ModalSwitch />
     </BrowserRouter>
   );
