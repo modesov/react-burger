@@ -9,5 +9,5 @@ export type TTabsActions = ISetCurrentTabAction;
 
 export const setCurrentTab = (value: string): ISetCurrentTabAction => ({
   type: SET_CURRENT_TAB,
-  value: value
+  value
 });

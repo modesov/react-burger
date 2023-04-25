@@ -103,7 +103,7 @@ export interface ResetPasswordType {
 export type TWSOrderState = {
   wsConnected: boolean;
   data: WSOrdersType | null;
-  error: Event | null;
+  error: boolean;
 }
 
 export type HandleFunctionType = () => void;

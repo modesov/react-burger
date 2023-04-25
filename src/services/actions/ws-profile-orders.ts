@@ -17,7 +17,6 @@ export interface IWSProfileOrdersConnectionSuccessAction {
 
 export interface IWSProfileOrdersConnectionErrorAction {
   readonly type: typeof WS_PROFILE_ORDERS_CONNECTION_ERROR;
-  readonly payload: Event;
 }
 
 export interface IWSProfileOrdersConnectionClosedAction {
