@@ -1,4 +1,4 @@
-import { AuthUserType, ResetPasswordType, UserLoginType, UserType } from "../utils/types";
+import { ResetPasswordType, UserLoginType, UserType } from "../utils/types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api/';
 

@@ -31,16 +31,16 @@ export type TOrderActions =
   | IOrderReregistrationFailedAction
   | IOrderCleanAction;
  
-const getOrderRegistrationAction = (): IOrderReregistrationAction => ({
+export const getOrderRegistrationAction = (): IOrderReregistrationAction => ({
   type: ORDER_REGISTRATION
 })
 
-const getOrderRegistrationSuccessAction = (data: OrderType): IOrderReregistrationSuccessAction => ({
+export const getOrderRegistrationSuccessAction = (data: OrderType): IOrderReregistrationSuccessAction => ({
   type: ORDER_REGISTRATION_SUCCESS,
   data
 })
 
-const getOrderRegistrationFailedAction = (): IOrderReregistrationFailedAction => ({
+export const getOrderRegistrationFailedAction = (): IOrderReregistrationFailedAction => ({
   type: ORDER_REGISTRATION_FAILED,
 })
 

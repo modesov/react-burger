@@ -13,14 +13,14 @@ type TIngredientsState = {
   data: IngredientType[]
 }
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   isLoading: false,
   hasError: false,
   data: []
 }
 
-const ingredients = (state = initialState, action: TIngredientsActions): TIngredientsState => {
-  switch (action.type) {
+const ingredients = (state = initialState, action: TIngredientsActions | null): TIngredientsState => {
+  switch (action?.type) {
     case GET_INGREDIENTS: {
       return {
         ...state,
