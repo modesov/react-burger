@@ -36,7 +36,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "deploy-yac": "npm run build && scp -r ./build/* denimod@51.250.38.71:/home/denimod/stellar-frontend"
+    "deploy-yac": "npm run build && scp -r ./build/* stellar@158.160.62.193:/home/stellar/burger"
   },
   "eslintConfig": {
     "extends": [
