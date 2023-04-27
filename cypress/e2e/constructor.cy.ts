@@ -1,17 +1,18 @@
 describe('Конструктор работоспособен', () => {
   beforeEach(() => {
+    cy.viewport(1920, 1080)
     cy.visit('/');
   });
 
   it('Должно открываться и закрываться модальное окно ингредиента', () => {
-    cy.get('#bun .section-ingredients_item__MIURy:last-child').click();
-    cy.get('#modals .modal_header__ZrtET').should('have.text', 'Детали ингредиента');
-    cy.get('#modals button.modal_btnClose__sqy3w').click();
+    cy.get('#bun ul>li:last-child').click();
+    cy.get('#modals [class^=modal_header_]').should('have.text', 'Детали ингредиента');
+    cy.get('#modals [class^=modal_btnClose_]').click();
     cy.get('#modals').children().should('have.length', 0);
 
-    cy.get('#main .section-ingredients_item__MIURy:first-child').click();
-    cy.get('#modals .modal_header__ZrtET').should('have.text', 'Детали ингредиента');
-    cy.get('#modals button.modal_btnClose__sqy3w').click();
+    cy.get('#main ul>li:first-child').click();
+    cy.get('#modals [class^=modal_header_]').should('have.text', 'Детали ингредиента');
+    cy.get('#modals [class^=modal_btnClose_]').click();
     cy.get('#modals').children().should('have.length', 0);
   });
 
@@ -19,56 +20,56 @@ describe('Конструктор работоспособен', () => {
     const dataTransfer = new DataTransfer();
  
     // Перетаскиваем булку в конструктор
-    cy.get('#bun .section-ingredients_item__MIURy:last-child').trigger('dragstart', {
+    cy.get('#bun [class^=section-ingredients_item_]:last-child').trigger('dragstart', {
       dataTransfer
     }); 
-    cy.get('.burger-constructor_constructorBox__5flZl').trigger('drop', {
+    cy.get('[class^=burger-constructor_constructorBox_]').trigger('drop', {
       dataTransfer
     });
     // Проверяем количество
-    cy.get('#bun .section-ingredients_item__MIURy:last-child .counter__num').should('have.text', '2');
+    cy.get('#bun [class^=section-ingredients_item_]:last-child .counter__num').should('have.text', '2');
 
 
     // Перетаскиваем соус в конструктор
-    cy.get('#sauce .section-ingredients_item__MIURy:last-child').trigger('dragstart', {
+    cy.get('#sauce [class^=section-ingredients_item_]:last-child').trigger('dragstart', {
       dataTransfer
     }); 
-    cy.get('.burger-constructor_constructorBox__5flZl').trigger('drop', {
+    cy.get('[class^=burger-constructor_constructorBox_]').trigger('drop', {
       dataTransfer
     });
     // Проверяем количество
-    cy.get('#sauce .section-ingredients_item__MIURy:last-child .counter__num').should('have.text', '1');
+    cy.get('#sauce [class^=section-ingredients_item_]:last-child .counter__num').should('have.text', '1');
     // Перетаскиваем еще один такой же ингредиент
-    cy.get('#sauce .section-ingredients_item__MIURy:last-child').trigger('dragstart', {
+    cy.get('#sauce [class^=section-ingredients_item_]:last-child').trigger('dragstart', {
       dataTransfer
     }); 
-    cy.get('.burger-constructor_constructorBox__5flZl').trigger('drop', {
+    cy.get('[class^=burger-constructor_constructorBox_]').trigger('drop', {
       dataTransfer
     });
     // Проверяем количество
-    cy.get('#sauce .section-ingredients_item__MIURy:last-child .counter__num').should('have.text', '2');
+    cy.get('#sauce [class^=section-ingredients_item_]:last-child .counter__num').should('have.text', '2');
 
 
     // Перетаскиваем еще (другой) соус в конструктор
-    cy.get('#sauce .section-ingredients_item__MIURy:first-child').trigger('dragstart', {
+    cy.get('#sauce [class^=section-ingredients_item_]:first-child').trigger('dragstart', {
       dataTransfer
     }); 
-    cy.get('.burger-constructor_constructorBox__5flZl').trigger('drop', {
+    cy.get('[class^=burger-constructor_constructorBox_]').trigger('drop', {
       dataTransfer
     });
     // Проверяем количество
-    cy.get('#sauce .section-ingredients_item__MIURy:first-child .counter__num').should('have.text', '1');
+    cy.get('#sauce [class^=section-ingredients_item_]:first-child .counter__num').should('have.text', '1');
 
 
     // Перетаскиваем начинку в конструктор
-    cy.get('#main .section-ingredients_item__MIURy:first-child').trigger('dragstart', {
+    cy.get('#main [class^=section-ingredients_item_]:first-child').trigger('dragstart', {
       dataTransfer
     }); 
-    cy.get('.burger-constructor_constructorBox__5flZl').trigger('drop', {
+    cy.get('[class^=burger-constructor_constructorBox_]').trigger('drop', {
       dataTransfer
     });
     // Проверяем количество
-    cy.get('#main .section-ingredients_item__MIURy:first-child .counter__num').should('have.text', '1');
+    cy.get('#main [class^=section-ingredients_item_]:first-child .counter__num').should('have.text', '1');
 
     
     // Проверяем количество добавленных ингредиентов
@@ -76,16 +77,37 @@ describe('Конструктор работоспособен', () => {
     cy.get('.constructor-element_pos_bottom'); // Нижняя есть
 
     // Проверяем количество ингредиентов
-    cy.get('.burger-constructor_constructorBox__5flZl ul').children().should('have.length', 4);    
+    cy.get('[class^=burger-constructor_constructorBox_] ul').children().should('have.length', 4);    
 
     // Удаляем один ингредиент
-    cy.get('.burger-constructor_constructorBox__5flZl ul>li:first-child .constructor-element__action').click();
+    cy.get('[class^=burger-constructor_constructorBox_] ul>li:first-child .constructor-element__action').click();
 
     // Проверяем количество ингредиентов
-    cy.get('.burger-constructor_constructorBox__5flZl ul').children().should('have.length', 3); 
+    cy.get('[class^=burger-constructor_constructorBox_] ul').children().should('have.length', 3); 
 
     
     // Нажимаем оформить заказ
+    cy.get('[class^=burger-constructor_totalBox_] button').contains('Оформить заказ').click();
+    // Перебрасывает на логин
+    cy.url().should('include', '/login');
+    // Вводим данные
+    cy.get('input[type=email]').type('msdenimod@yandex.ru');
+    cy.get('input[type=password]').type('55187f26-c725-4977-88f6-1291d64f3dfc');
+    // Нажимаем войти
+    cy.get('form button[type=submit]').contains('Войти').click();
+    // Опять Нажимаем оформить заказ
+    cy.get('[class^=burger-constructor_totalBox_] button').contains('Оформить заказ').click();
+    // Проверяем есть ли модалка (Заказ оформляется примерно 15 секунд)
+    cy.get('#modals [class^=order-details_box_]', { timeout: 20000 }).contains('идентификатор заказа');
+    // Закрываем модалку
+    cy.get('#modals [class^=modal_btnClose_]').click();
+    // Проверяем что конструктор очистился
+    cy.get('[class^=burger-constructor_constructorBox_]').contains('Перенесите булку сюда');
+    // Зайдем в личный кабинет 
+    cy.get('a[href*="profile"]').click()
+    // Выход
+    cy.get('[class^=profile-navigation_list_] li:last-child button').click(); 
+    // Проверка что вышел
+    cy.url().should('include', '/login');
   });
-
 });

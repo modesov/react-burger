@@ -37,7 +37,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "deploy-yac": "npm run build && scp -r ./build/* stellar@158.160.62.193:/home/stellar/burger",
-    "cypress:open": "./node_modules/.bin/cypress open"
+    "cy:open": "./node_modules/.bin/cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -60,6 +60,7 @@
   "devDependencies": {
     "@types/uuid": "^9.0.1",
     "cypress": "^12.10.0",
+    "eslint-plugin-cypress": "^2.13.2",
     "gh-pages": "^5.0.0"
   }
 }
