@@ -65,7 +65,7 @@ const BurgerConstructor: FC = () => {
   return (
     <section
       ref={dropRef}
-      className={`mt-20 pt-5 pr-4 pl-4 ${burgerConstructorStyle.constructorBox} ${isHover ? burgerConstructorStyle.isHover : ''}`}
+      className={`${burgerConstructorStyle.constructorBox} ${isHover ? burgerConstructorStyle.isHover : ''} mt-20 pt-5 pr-4 pl-4`}
     >
       {!wrapIngredient && (
         <div className={`text text_type_main-medium ${burgerConstructorStyle.hintBun}`}>

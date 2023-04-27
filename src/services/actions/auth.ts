@@ -36,16 +36,16 @@ export type TAuthActions =
   | IGetAuthErrorAction
   | IGetResetAuthAction;
 
-const getAuthRequestAction = (): IGetAuthRequestAction => ({
+export const getAuthRequestAction = (): IGetAuthRequestAction => ({
   type: AUTH_REQUEST
 })
 
-const getAuthSuccessAction = (user: AuthUserType): IGetAuthSuccessAction => ({
+export const getAuthSuccessAction = (user: AuthUserType): IGetAuthSuccessAction => ({
   type: AUTH_SUCCESS,
   user
 })
 
-const getAuthErrorAction = (): IGetAuthErrorAction => ({
+export const getAuthErrorAction = (): IGetAuthErrorAction => ({
   type: AUTH_ERROR
 })
 

@@ -13,14 +13,14 @@ type TOrderState = {
   orderData: OrderType | null;
 }
 
-const initialState: TOrderState = {
+export const initialState: TOrderState = {
   isOrderRegistration: false,
   hasOrderError: false,
   orderData: null
 }
 
-const order = (state = initialState, action: TOrderActions): TOrderState => {
-  switch (action.type) {
+const order = (state = initialState, action: TOrderActions | null): TOrderState => {
+  switch (action?.type) {
     case ORDER_REGISTRATION: {
       return {
         ...state,

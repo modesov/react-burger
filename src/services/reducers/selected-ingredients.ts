@@ -12,13 +12,13 @@ type TSelectedIngredientsState = {
   burgerInsides: SelectedIngredientType[]
 }
 
-const initialState: TSelectedIngredientsState = {
+export const initialState: TSelectedIngredientsState = {
   wrapIngredient: null,
   burgerInsides: []
 }
 
-const selectedIngredients = (state = initialState, action: TSelectedIngredientActions): TSelectedIngredientsState => {
-  switch (action.type) {
+const selectedIngredients = (state = initialState, action: TSelectedIngredientActions | null): TSelectedIngredientsState => {
+  switch (action?.type) {
     case ADD_SELECTED_INGREDIENT: {
       if (action.data.type === 'bun') {
         return { ...state, wrapIngredient: action.data }

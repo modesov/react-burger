@@ -5,7 +5,7 @@ import {
 } from '../constants';
 
 
-const initialState: TabType[] = [
+export const initialState: TabType[] = [
   {
     value: 'bun',
     text: 'Булки',
@@ -23,8 +23,8 @@ const initialState: TabType[] = [
   },
 ];
 
-const tabs = (state = initialState, action: TTabsActions): TabType[] => {
-  switch (action.type) {
+const tabs = (state = initialState, action: TTabsActions | null): TabType[] => {
+  switch (action?.type) {
     case SET_CURRENT_TAB: {
       return state.map((tab) => ({ ...tab, isActive: tab.value === action.value }));
     }

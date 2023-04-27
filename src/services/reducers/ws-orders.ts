@@ -7,14 +7,14 @@ import {
   WS_ORDERS_GET_MESSAGE
 } from '../constants';
 
-const initialState: TWSOrderState = {
+export const initialState: TWSOrderState = {
   wsConnected: false,
   data: null,
-  error: null,
+  error: false,
 }
 
-const wsOrders = (state = initialState, action: TWSOrdersActions): TWSOrderState => {
-  switch (action.type) {
+const wsOrders = (state = initialState, action: TWSOrdersActions | null): TWSOrderState => {
+  switch (action?.type) {
     case WS_ORDERS_CONNECTION_SUCCESS: {
       return {
         ...state,
@@ -24,7 +24,7 @@ const wsOrders = (state = initialState, action: TWSOrdersActions): TWSOrderState
     case WS_ORDERS_CONNECTION_ERROR: {
       return {
         ...state,
-        error: action.payload,
+        error: true,
         wsConnected: false
       };
     }

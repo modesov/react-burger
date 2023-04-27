@@ -13,14 +13,14 @@ type TAuthState = {
   user: AuthUserType | null;
 }
 
-const initialState: TAuthState = {
+export const initialState: TAuthState = {
   isLoading: false,
   hasError: false,
   user: null
 }
 
-const auth = (state = initialState, action: TAuthActions): TAuthState => {
-  switch (action.type) {
+const auth = (state = initialState, action: TAuthActions | null): TAuthState => {
+  switch (action?.type) {
     case AUTH_REQUEST: {
       return {
         ...initialState,

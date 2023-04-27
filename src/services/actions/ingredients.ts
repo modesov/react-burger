@@ -30,16 +30,16 @@ export type TIngredientsActions =
   | IGetIngredientsFailedAction
   | IGetCleanIngredientsAction;
 
-const getIngredientsAction = (): IGetIngredientsAction => ({
+export const getIngredientsAction = (): IGetIngredientsAction => ({
   type: GET_INGREDIENTS
 })
 
-const getIngredientsSuccessAction = (data: IngredientType[]): IGetIngredientsSuccessAction => ({
+export const getIngredientsSuccessAction = (data: IngredientType[]): IGetIngredientsSuccessAction => ({
   type: GET_INGREDIENTS_SUCCESS,
   data
 })
 
-const getIngredientsFailedAction = (): IGetIngredientsFailedAction => ({
+export const getIngredientsFailedAction = (): IGetIngredientsFailedAction => ({
   type: GET_INGREDIENTS_FAILED
 })
 

@@ -53,11 +53,28 @@ export interface TabType {
   isActive: boolean;
 }
 
+export interface OwnerType {
+  name: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+} 
+
+export interface OrderInfoType {
+    ingredients: IngredientType[];
+    _id: string;
+    owner: OwnerType;
+    status: 'created' | 'pending' | 'done';
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    number: number;
+    price: number;
+}
+
 export interface OrderType {
   name: string;
-  order: {
-    number: number;
-  }
+  order: OrderInfoType;
   success: boolean;
 }
 
@@ -103,7 +120,7 @@ export interface ResetPasswordType {
 export type TWSOrderState = {
   wsConnected: boolean;
   data: WSOrdersType | null;
-  error: Event | null;
+  error: boolean;
 }
 
 export type HandleFunctionType = () => void;
