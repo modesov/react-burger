@@ -1,7 +1,5 @@
 # Project demonstration
 [https://modesov.github.io/react-burger/](https://modesov.github.io/react-burger/)
-or
-[https://denimod.nomoredomains.monster/](https://denimod.nomoredomains.monster/)
 
 # Getting Started with Create React App
 
